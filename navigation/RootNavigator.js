@@ -8,6 +8,8 @@ export default function RootNavigator() {
 
   const isAuthenticated = !!userID && !!userToken;
   // console.log("ROOT NAV", userID, userToken, isLoading);
+  // console.log("LOGIN CONTEXT", userID, userToken);
+
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -19,7 +21,7 @@ export default function RootNavigator() {
   // isLoading = true = on lit async Storage
   // quand c’est fini = isLoading = false
   // ensuite seulement on décide entre (auth) et (main)
-
+  // console.log("ROOT NAV", userID, userToken, isLoading, isAuthenticated);
   return (
     <Stack screenOptions={{ headerShown: false }}>
       {isAuthenticated ? (

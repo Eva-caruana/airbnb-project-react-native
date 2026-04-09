@@ -63,7 +63,7 @@ const SignupPage = () => {
       ) {
         setErrorMessage("User already exists");
       } else {
-        setErrorMessage("An error occurred");
+        setErrorMessage(error.response?.data.error);
       }
     }
   };
@@ -72,7 +72,7 @@ const SignupPage = () => {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <Logo />
+      <Logo size="large" />
       <Title text={"Sign Up"} />
       <Input state={email} setState={setEmail} placeholder={"email"} />
       <Input state={username} setState={setUsername} placeholder={"username"} />

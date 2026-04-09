@@ -44,7 +44,9 @@ const LoginPage = () => {
       // console.log("ID SENT TO CONTEXT:", response.data.id);
       // console.log("TOKEN SENT TO CONTEXT:", response.data.token);
       login(response.data.id, response.data.token);
+      console.log("cliked");
     } catch (error) {
+      console.log(error.message);
       setErrorMessage("Invalid email or password");
     }
   };
@@ -54,7 +56,7 @@ const LoginPage = () => {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <Logo />
+      <Logo size="large" />
       <Title text={"Sign In"} />
       <Input placeholder="email" state={email} setState={setEmail} />
       <Input

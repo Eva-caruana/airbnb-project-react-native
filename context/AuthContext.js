@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
           setUserID(storedUserID);
           setUserToken(storedUserToken);
         }
-        // console.log("LOGIN CONTEXT", id, token);
+        console.log("LOGIN CONTEXT", id, token);
       } catch (error) {
         console.log(error);
       } finally {
@@ -30,9 +30,10 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (id, token) => {
-    console.log("CONTEXT LOGIN:", id, token);
+    // console.log("CONTEXT LOGIN:", id, token);
     try {
       setUserID(id);
+
       setUserToken(token);
 
       await AsyncStorage.setItem("userID", String(id));

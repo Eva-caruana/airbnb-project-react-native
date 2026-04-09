@@ -13,6 +13,9 @@ import { useRouter } from "expo-router";
 import axios from "axios";
 import { AuthContext } from "../../../context/AuthContext";
 
+import Informations from "../../../components/Infomations";
+import PriceView from "../../../components/PriceView";
+
 export default function rooms() {
   const { userToken } = useContext(AuthContext);
   const router = useRouter();
@@ -38,24 +41,7 @@ export default function rooms() {
     fetchRooms();
   }, []);
 
-  const renderStars = (ratingValue) => {
-    const stars = [];
-    const roundedRating = Math.round(ratingValue);
-
-    for (let i = 1; i <= 5; i++) {
-      stars.push(
-        <Text
-          key={i}
-          style={i <= roundedRating ? styles.yellowStar : styles.grayStar}
-        >
-          ★
-        </Text>,
-      );
-    }
-
-    return <View style={styles.starsContainer}>{stars}</View>;
-  };
-
+  // comment afficher une room
   const renderItem = ({ item }) => {
     return (
       <Pressable
@@ -72,28 +58,15 @@ export default function rooms() {
           style={styles.roomImage}
           imageStyle={styles.roomImageStyle}
         >
-          <View style={styles.priceBox}>
-            <Text style={styles.priceText}>{item.price} €</Text>
-          </View>
+          <PriceView price={item.price} />
         </ImageBackground>
 
-        <View style={styles.infoSection}>
-          <View style={styles.textSection}>
-            <Text style={styles.title} numberOfLines={1}>
-              {item.title}
-            </Text>
-
-            <View style={styles.detailsRow}>
-              {renderStars(item.ratingValue)}
-              <Text style={styles.reviewsText}>{item.reviews} reviews</Text>
-            </View>
-          </View>
-
-          <Image
-            source={{ uri: item.user.account.photo.url }}
-            style={styles.avatar}
-          />
-        </View>
+        <Informations
+          title={item.title}
+          ratingValue={item.ratingValue}
+          reviews={item.reviews}
+          photo={item.user.account.photo.url}
+        />
       </Pressable>
     );
   };
@@ -143,55 +116,5 @@ const styles = StyleSheet.create({
   },
   roomImageStyle: {
     borderRadius: 12,
-  },
-  priceBox: {
-    backgroundColor: "black",
-    alignSelf: "flex-start",
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    marginBottom: 15,
-  },
-  priceText: {
-    color: "white",
-    fontSize: 16,
-  },
-  infoSection: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 12,
-    alignItems: "center",
-  },
-  textSection: {
-    flex: 1,
-    paddingRight: 12,
-  },
-  title: {
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  detailsRow: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  starsContainer: {
-    flexDirection: "row",
-    marginRight: 8,
-  },
-  yellowStar: {
-    color: "#FFB100",
-    fontSize: 16,
-  },
-  grayStar: {
-    color: "#C4C4C4",
-    fontSize: 16,
-  },
-  reviewsText: {
-    color: "gray",
-    fontSize: 13,
-  },
-  avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
   },
 });
