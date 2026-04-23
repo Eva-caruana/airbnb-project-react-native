@@ -18,7 +18,7 @@ const displayStars = (ratingValue) => {
   return stars;
 };
 
-function Informations({ title, ratingValue, reviews, photo }) {
+function Informations({ title, ratingValue, reviews, photo, description }) {
   return (
     <View style={styles.informations}>
       {/* Partie gauche */}

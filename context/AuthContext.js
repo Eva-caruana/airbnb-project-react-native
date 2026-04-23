@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
           setUserID(storedUserID);
           setUserToken(storedUserToken);
         }
-        console.log("LOGIN CONTEXT", id, token);
+        // console.log("LOGIN CONTEXT", id, token);
       } catch (error) {
         console.log(error);
       } finally {

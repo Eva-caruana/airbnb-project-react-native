@@ -24,11 +24,13 @@ export default function RootNavigator() {
   // console.log("ROOT NAV", userID, userToken, isLoading, isAuthenticated);
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      {isAuthenticated ? (
-        <Stack.Screen name="(main)" />
-      ) : (
+      <Stack.Protected guard={!isAuthenticated}>
         <Stack.Screen name="(auth)" />
-      )}
+      </Stack.Protected>
+
+      <Stack.Protected guard={isAuthenticated}>
+        <Stack.Screen name="(main)" />
+      </Stack.Protected>
     </Stack>
   );
 }

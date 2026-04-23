@@ -13,7 +13,12 @@ export default function HomeLayout() {
       }}
     >
       <Stack.Screen name="rooms" />
-      <Stack.Screen name="room" />
+      <Stack.Screen
+        name="room"
+        options={{
+          headerBackButtonDisplayMode: "minimal",
+        }}
+      />
     </Stack>
   );
 }
