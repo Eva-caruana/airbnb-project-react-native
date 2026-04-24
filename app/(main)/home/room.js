@@ -7,6 +7,7 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import Swiper from "react-native-swiper";
@@ -14,6 +15,7 @@ import axios from "axios";
 import PriceView from "../../../components/PriceView";
 import Informations from "../../../components/Infomations";
 import colors from "../../../assets/colors/main.json";
+import Loader from "../../../components/Loader";
 
 export default function Room() {
   const { id } = useLocalSearchParams();
@@ -30,21 +32,19 @@ export default function Room() {
         );
 
         setData(response.data);
-        setIsLoading(false);
+
         // console.log("ROOM API =", response.data);
       } catch (error) {
         console.log(error.response || error.message || error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchRoom();
   }, [id]);
 
   if (isLoading) {
-    return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+    return <Loader />;
   }
 
   if (!data) {
@@ -96,6 +96,27 @@ export default function Room() {
           </Pressable>
         </View>
       </View>
+
+      {/* Afficher la localisation de la room */}
+      <MapView
+        // la map doit avoir une dimension
+        style={styles.map}
+        // position initiale basée sur paris
+        initialRegion={{
+          latitude: 48.856614,
+          longitude: 2.3522219,
+          latitudeDelta: 0.1,
+          longitudeDelta: 0.1,
+        }}
+      >
+        <Marker
+          key={data._id}
+          coordinate={{
+            latitude: data.location[1],
+            longitude: data.location[0],
+          }}
+        />
+      </MapView>
     </ScrollView>
   );
 }
@@ -138,5 +159,9 @@ const styles = StyleSheet.create({
   },
   swiper: {
     height: 320,
+  },
+  map: {
+    height: 300,
+    marginTop: 20,
   },
 });

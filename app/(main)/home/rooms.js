@@ -3,10 +3,8 @@ import {
   View,
   Text,
   StyleSheet,
-  ActivityIndicator,
   FlatList,
   Pressable,
-  Image,
   ImageBackground,
 } from "react-native";
 import { useRouter } from "expo-router";
@@ -15,9 +13,9 @@ import { AuthContext } from "../../../context/AuthContext";
 
 import Informations from "../../../components/Infomations";
 import PriceView from "../../../components/PriceView";
+import Loader from "../../../components/Loader";
 
-export default function rooms() {
-  const { userToken } = useContext(AuthContext);
+export default function Rooms() {
   const router = useRouter();
 
   const [data, setData] = useState([]);
@@ -72,11 +70,7 @@ export default function rooms() {
   };
 
   if (isLoading) {
-    return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+    return <Loader />;
   }
 
   return (
