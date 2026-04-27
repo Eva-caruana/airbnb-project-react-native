@@ -1,11 +1,31 @@
 import { useContext, useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import {
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  Image,
+  Pressable,
+  TouchableWithoutFeedback,
+  ScrollView,
+  Keyboard,
+} from "react-native";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 
-import Title from "../../components/Title";
+//acceder a la galerie user et changer de photo
+import * as ImagePicker from "expo-image-picker";
+
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import Feather from "@expo/vector-icons/Feather";
+
 import MainButton from "../../components/MainButton";
 import Loader from "../../components/Loader";
+import colors from "../../assets/colors/main.json";
+import Input from "../../components/Input";
+import LargeInput from "../../components/LargeInput";
 
 export default function ProfilePage() {
   const { logout, userID, userToken } = useContext(AuthContext);
@@ -37,7 +57,6 @@ export default function ProfilePage() {
         setNewEmail(response.data.email);
         setNewDescription(response.data.description);
         setNewUsername(response.data.username);
-        setNewPhoto(response.data.photo);
       } catch (error) {
         console.log(error.response || error.message || error);
       } finally {
@@ -64,8 +83,10 @@ export default function ProfilePage() {
           },
         },
       );
-
       setData(response.data);
+      setNewEmail(response.data.email);
+      setNewUsername(response.data.username);
+      setNewDescription(response.data.description);
     } catch (error) {
       console.log(error.response || error.message || error);
     }
@@ -106,10 +127,44 @@ export default function ProfilePage() {
 
   // Bouton update : met à jour les infos, puis la photo si une nouvelle photo existe
   const handleUpdate = async () => {
+    console.log("click update");
     await updateData();
 
     if (newPhoto) {
       await updatePhoto();
+      console.log("updated");
+    }
+  };
+
+  // bouton galerie
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setNewPhoto(result.assets[0]);
+    }
+  };
+
+  // bouton caméra
+  const takePhoto = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (status !== "granted") {
+      console.log("Permission caméra refusée");
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setNewPhoto(result.assets[0]);
     }
   };
 
@@ -117,12 +172,82 @@ export default function ProfilePage() {
     return <Loader />;
   }
   return (
-    <View style={styles.container}>
-      <Title text={"Profile"} />
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            contentContainerStyle={styles.container}
+            keyboardShouldPersistTaps="handled"
+          >
+            {/* Image utilisateur  */}
+            <View style={styles.userImageSection}>
+              {newPhoto?.uri ? (
+                <Image
+                  style={styles.avatarPlaceholder}
+                  source={{ uri: newPhoto.uri }}
+                />
+              ) : data?.photo?.url ? (
+                <Image
+                  style={styles.avatarPlaceholder}
+                  source={{ uri: data.photo.url }}
+                />
+              ) : (
+                <View style={styles.avatarPlaceholder}>
+                  <Ionicons name="person" size={120} color="#E0E0E0" />
+                </View>
+              )}
 
-      <MainButton text={"Update"} onPress={handleUpdate} />
-      <MainButton text={"Logout"} onPress={logout} />
-    </View>
+              {/* Boutons */}
+              <View style={styles.buttons}>
+                <Pressable onPress={pickImage}>
+                  <SimpleLineIcons
+                    name="picture"
+                    size={24}
+                    color="black"
+                    style={styles.icon}
+                  />
+                </Pressable>
+
+                <Pressable onPress={takePhoto}>
+                  <Feather
+                    name="camera"
+                    size={24}
+                    color="black"
+                    style={styles.icon}
+                  />
+                </Pressable>
+              </View>
+            </View>
+            <Input
+              state={newEmail}
+              setState={setNewEmail}
+              placeholder={"email"}
+            />
+            <Input
+              state={newUsername}
+              setState={setNewUsername}
+              placeholder={"username"}
+            />
+            <LargeInput
+              state={newDescription}
+              setState={setNewDescription}
+              placeholder={"Description"}
+            />
+            <MainButton
+              text={"Update"}
+              onPress={() => {
+                console.log("CLICK");
+                handleUpdate();
+              }}
+            />
+            <MainButton text={"Logout"} onPress={logout} />
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
@@ -131,6 +256,37 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    gap: 50,
+    gap: 10,
+  },
+  userImageSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 20,
+  },
+  // userImage: {
+  //   //  flex: 1,
+  //   height: 50,
+  //   width: 50,
+  //   borderRadius: 50,
+  //   borderColor: colors.pink,
+  // },
+
+  icon: {
+    height: 30,
+    width: 30,
+    color: "#717171",
+  },
+  buttons: {
+    gap: 20,
+  },
+  avatarPlaceholder: {
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+    borderWidth: 2,
+    borderColor: colors.pink,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

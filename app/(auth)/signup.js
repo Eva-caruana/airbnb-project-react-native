@@ -94,7 +94,7 @@ const SignupPage = () => {
         secure={true}
       />
       <ErrorMessage errorMessage={errorMessage} />
-      <MainButton text={"Sign Up"} func={handleSignUp} />
+      <MainButton text={"Sign Up"} onPress={handleSignUp} />
       <RedirectButton
         text={"Already have an account ? Sign in !"}
         func={() => {

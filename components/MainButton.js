@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Link } from "expo-router";
 import colors from "../assets/colors/main.json";
-export default function MainButton({ text, func }) {
+export default function MainButton({ text, onPress }) {
   return (
-    <Pressable style={styles.button} onPress={func}>
+    <Pressable style={styles.button} onPress={onPress}>
       <Text style={styles.text}>{text}</Text>
     </Pressable>
   );

@@ -66,7 +66,7 @@ const LoginPage = () => {
         secure={true}
       />
       <ErrorMessage errorMessage={errorMessage} />
-      <MainButton text="Sign In" func={connect} />
+      <MainButton text="Sign In" onPress={connect} />
       <RedirectButton
         text={"No account ? Register"}
         func={() => {

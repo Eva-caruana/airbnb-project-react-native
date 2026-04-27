@@ -33,10 +33,12 @@ export default function MainLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
           tabBarIcon: ({ color }) => (
             <Feather name="user" size={24} color={color} />
           ),
+          headerTitle: () => {
+            return <Logo size="small" />;
+          },
         }}
       />
     </Tabs>
