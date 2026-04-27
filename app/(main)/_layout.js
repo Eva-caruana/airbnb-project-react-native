@@ -2,6 +2,7 @@ import { Tabs } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Feather from "@expo/vector-icons/Feather";
 import colors from "../../assets/colors/main.json";
+import Logo from "../../components/Logo";
 
 export default function MainLayout() {
   return (
@@ -33,6 +34,7 @@ export default function MainLayout() {
       <Tabs.Screen
         name="profile"
         options={{
+          headerShown: true,
           tabBarIcon: ({ color }) => (
             <Feather name="user" size={24} color={color} />
           ),
